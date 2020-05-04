@@ -234,9 +234,10 @@ bool NexUpload::_downloadTftFile(void)
         } 
         else
         {
-            return 0;
+            return false;
         }
          --send_timer;
-    }  
+    }
+	return true;
 }
 
