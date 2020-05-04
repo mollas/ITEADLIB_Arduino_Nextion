@@ -17,8 +17,8 @@
 bool NexRtc::write_rtc_time(char *time)
 {
     char year[5],mon[3],day[3],hour[3],min[3],sec[3];
-    String cmd = String("rtc");
-    int i;
+    String cmd = "";
+	bool ret_val = true;
     
     if(strlen(time) >= 19)
     {
@@ -29,41 +29,37 @@ bool NexRtc::write_rtc_time(char *time)
         min[0]=time[14];min[1]=time[15];min[2]='\0';
         sec[0]=time[17];sec[1]=time[18];sec[2]='\0';
         
-        cmd += "0=";
+        cmd = "rtc0=";
         cmd += year;
         sendCommand(cmd.c_str()); 
-        recvRetCommandFinished();
+        ret_val &= recvRetCommandFinished();
         
-        cmd = "";
-        cmd += "rtc1=";
+        cmd = "rtc1=";
         cmd += mon;
         sendCommand(cmd.c_str());
-        recvRetCommandFinished();
+        ret_val &= recvRetCommandFinished();
         
-        cmd = "";
-        cmd += "rtc2=";
+        cmd = "rtc2=";
         cmd += day;
         sendCommand(cmd.c_str());
-        recvRetCommandFinished();
+        ret_val &= recvRetCommandFinished();
         
-        cmd = "";
-        cmd += "rtc3=";
+        cmd = "rtc3=";
         cmd += hour;
         sendCommand(cmd.c_str());
-        recvRetCommandFinished();
+        ret_val &= recvRetCommandFinished();
         
-        cmd = "";
-        cmd += "rtc4=";
+        cmd = "rtc4=";
         cmd += min;
         sendCommand(cmd.c_str());
-        recvRetCommandFinished();
+        ret_val &= recvRetCommandFinished();
         
-        cmd = "";
-        cmd += "rtc5=";
+        cmd = "rtc5=";
         cmd += sec;
         sendCommand(cmd.c_str());
-        recvRetCommandFinished();
+        ret_val &= recvRetCommandFinished();
         
+		return ret_val;
     }
     else
     {
@@ -75,57 +71,52 @@ bool NexRtc::write_rtc_time(uint32_t *time)
 {
     char year[5],mon[3],day[3],hour[3],min[3],sec[3];
     String cmd = String("rtc");
-    int i;
+	bool ret_val = true;
     
-     utoa(time[0],year,10);
-     utoa(time[1],mon, 10);
-     utoa(time[2],day, 10);
-     utoa(time[3],hour,10);
-     utoa(time[4],min, 10);
-     utoa(time[5],sec, 10);
+    utoa(time[0],year,10);
+    utoa(time[1],mon, 10);
+    utoa(time[2],day, 10);
+    utoa(time[3],hour,10);
+    utoa(time[4],min, 10);
+    utoa(time[5],sec, 10);
+    
+    cmd = "rtc0=";
+    cmd += year;
+    sendCommand(cmd.c_str()); 
+    ret_val &= recvRetCommandFinished();
         
-        
-     cmd += "0=";
-     cmd += year;
-     sendCommand(cmd.c_str()); 
-     recvRetCommandFinished();
-        
-     cmd = "";
-     cmd += "rtc1=";
-     cmd += mon;
-     sendCommand(cmd.c_str());
-     recvRetCommandFinished();
-        
-     cmd = "";
-     cmd += "rtc2=";
-     cmd += day;
-     sendCommand(cmd.c_str());
-     recvRetCommandFinished();
-        
-     cmd = "";
-     cmd += "rtc3=";
-     cmd += hour;
-     sendCommand(cmd.c_str());
-     recvRetCommandFinished();
-        
-     cmd = "";
-     cmd += "rtc4=";
-     cmd += min;
-     sendCommand(cmd.c_str());
-     recvRetCommandFinished();
-        
-     cmd = "";
-     cmd += "rtc5=";
-     cmd += sec;
-     sendCommand(cmd.c_str());
-     recvRetCommandFinished();
- 
+    cmd = "rtc1=";
+    cmd += mon;
+    sendCommand(cmd.c_str());
+    ret_val &= recvRetCommandFinished();
+     
+    cmd = "rtc2=";
+    cmd += day;
+    sendCommand(cmd.c_str());
+    ret_val &= recvRetCommandFinished();
+     
+    cmd = "rtc3=";
+    cmd += hour;
+    sendCommand(cmd.c_str());
+    ret_val &= recvRetCommandFinished();
+     
+    cmd = "rtc4=";
+    cmd += min;
+    sendCommand(cmd.c_str());
+    ret_val &= recvRetCommandFinished();
+     
+    cmd = "rtc5=";
+    cmd += sec;
+    sendCommand(cmd.c_str());
+    ret_val &= recvRetCommandFinished();
+	
+	return ret_val;
 }
 
 bool NexRtc::write_rtc_time(char *time_type,uint32_t number)
 {
     String cmd = String("rtc");
-    char buf[10] = {0};
+    char buf[10] = {0,0,0,0,0,0,0,0,0,0};
     
     utoa(number, buf, 10);
     if(strstr(time_type,"year"))
@@ -173,32 +164,26 @@ uint32_t NexRtc::read_rtc_time(char *time,uint32_t len)
     sendCommand(cmd.c_str());
     recvRetNumber(&year);
     
-    cmd = "";
     cmd = "get rtc1";
     sendCommand(cmd.c_str());
     recvRetNumber(&mon);
     
-    cmd = "";
     cmd = "get rtc2";
     sendCommand(cmd.c_str());
     recvRetNumber(&day);
     
-    cmd = "";
     cmd = "get rtc3";
     sendCommand(cmd.c_str());
     recvRetNumber(&hour);
     
-    cmd = "";
     cmd = "get rtc4";
     sendCommand(cmd.c_str());
     recvRetNumber(&min);
     
-    cmd = "";
     cmd = "get rtc5";
     sendCommand(cmd.c_str());
     recvRetNumber(&sec);
     
-    cmd = "";
     cmd = "get rtc6";
     sendCommand(cmd.c_str());
     recvRetNumber(&week);
@@ -234,12 +219,12 @@ uint32_t NexRtc::read_rtc_time(char *time,uint32_t len)
             time[i] = time_buf[i];
         }
     }   
-  
+	return 0;
 }
 
 uint32_t NexRtc::read_rtc_time(uint32_t *time,uint32_t len)
 {
-    uint32_t time_buf[7] = {0};
+    uint32_t time_buf[7] = {0,0,0,0,0,0,0};
     String cmd;
     
     cmd = "get rtc0";
@@ -281,14 +266,14 @@ uint32_t NexRtc::read_rtc_time(uint32_t *time,uint32_t len)
     {
        time[i] = time_buf[i];
     }
- 
+	
+	return 0;
 }
 
 
 uint32_t NexRtc::read_rtc_time(char *time_type,uint32_t *number)
 {
     String cmd = String("get rtc");
-    char buf[10] = {0};
     
     if(strstr(time_type,"year"))
     {
