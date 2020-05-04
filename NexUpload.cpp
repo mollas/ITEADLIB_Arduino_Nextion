@@ -14,6 +14,7 @@
  */
 
 #include "NexUpload.h"
+#ifndef ESP32
 #include <SoftwareSerial.h>
 
 //#define USE_SOFTWARE_SERIAL
@@ -30,6 +31,7 @@ SoftwareSerial dbSerial(3, 2); /* RX:D3, TX:D2 */
 #define dbSerialPrint(a)    do{}while(0)
 #define dbSerialPrintln(a)  do{}while(0)
 #define dbSerialBegin(a)    do{}while(0)
+#endif
 #endif
 
 NexUpload::NexUpload(const char *file_name,const uint8_t SD_chip_select,uint32_t download_baudrate)
