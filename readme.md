@@ -1,7 +1,9 @@
 # ESP32
 --------------------------------------------------------------------------------
 fixed Serial2 init
+
 fixed compile issues
+
 added macros in NexConfig.h for setting serial baud rates
 --------------------------------------------------------------------------------
 @mainpage Home Page
