@@ -222,8 +222,16 @@ bool nexInit(void)
     bool ret1 = false;
     bool ret2 = false;
     
-    dbSerialBegin(9600);
-    nexSerial.begin(9600);
+	#ifdef DEBUG_SERIAL_ENABLE
+    dbSerialBegin(dbSerialBaud);
+	#endif
+	
+	#ifdef ESP32
+	nexSerial.begin(nexSerialBaud, SERIAL_8N1, 16, 17);
+	#else
+    nexSerial.begin(nexSerialBaud);
+	#endif
+	
     sendCommand("");
     sendCommand("bkcmd=1");
     ret1 = recvRetCommandFinished();

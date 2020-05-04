@@ -30,11 +30,13 @@
  * Define dbSerial for the output of debug messages. 
  */
 #define dbSerial Serial
+#define dbSerialBaud 9600
 
 /**
  * Define nexSerial for communicate with Nextion touch panel. 
  */
 #define nexSerial Serial2
+#define nexSerialBaud 115200
 
 
 #ifdef DEBUG_SERIAL_ENABLE
